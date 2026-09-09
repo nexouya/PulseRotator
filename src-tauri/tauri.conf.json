@@ -42,7 +42,8 @@
     ],
     "resources": [
       "binaries/wintun.dll",
-      "binaries/mihomo.exe"
+      "binaries/mihomo.exe",
+      "binaries/mihomo-x86_64-pc-windows-msvc.exe"
     ]
   },
   "plugins": {

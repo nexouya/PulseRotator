@@ -42,7 +42,7 @@ pub mod win {
 
         pub fn assign_child(&self, child: &Child) -> Result<(), String> {
             unsafe {
-                let raw_handle = HANDLE(child.as_raw_handle() as _);
+                let raw_handle = HANDLE(child.as_raw_handle() as isize);
                 AssignProcessToJobObject(self.handle, raw_handle)
                     .map_err(|e| format!("AssignProcessToJobObject failed: {:?}", e))?;
                 Ok(())

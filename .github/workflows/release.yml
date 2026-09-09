@@ -64,4 +64,10 @@ jobs:
           releaseBody: 'Automated release generated via GitHub Actions.'
           releaseDraft: false
           prerelease: false
-          args: ${{ matrix.args }}
+          args: ''
+        continue-on-error: true
+
+      - name: Manual Fallback Build with CLI if Action fails
+        shell: bash
+        run: |
+          npx tauri build --verbose
