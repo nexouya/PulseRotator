@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "PulseRotator - High Performance IP Rotator",
         "width": 900,
         "height": 720,
