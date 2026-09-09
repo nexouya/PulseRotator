@@ -4,22 +4,13 @@ on:
   push:
     tags:
       - 'v*'
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
   build-tauri:
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'windows-latest'
-            args: ''
-
-    runs-on: ${{ matrix.platform }}
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -64,10 +55,3 @@ jobs:
           releaseBody: 'Automated release generated via GitHub Actions.'
           releaseDraft: false
           prerelease: false
-          args: ''
-        continue-on-error: true
-
-      - name: Manual Fallback Build with CLI if Action fails
-        shell: bash
-        run: |
-          npx tauri build --verbose
