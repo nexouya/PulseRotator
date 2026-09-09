@@ -19,6 +19,11 @@ pub mod win {
         handle: HANDLE,
     }
 
+    // Windows HANDLE contains *mut c_void, so we explicitly mark ProcessJob as Send + Sync
+    // It is completely safe because access is synchronized via Mutex inside SidecarManager.
+    unsafe impl Send for ProcessJob {}
+    unsafe impl Sync for ProcessJob {}
+
     impl ProcessJob {
         pub fn new() -> Result<Self, String> {
             unsafe {
@@ -42,7 +47,7 @@ pub mod win {
 
         pub fn assign_child(&self, child: &Child) -> Result<(), String> {
             unsafe {
-                let raw_handle = HANDLE(child.as_raw_handle() as isize);
+                let raw_handle = HANDLE(child.as_raw_handle() as *mut _);
                 AssignProcessToJobObject(self.handle, raw_handle)
                     .map_err(|e| format!("AssignProcessToJobObject failed: {:?}", e))?;
                 Ok(())
