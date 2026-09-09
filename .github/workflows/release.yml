@@ -1,0 +1,68 @@
+name: Release & Build PulseRotator
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'windows-latest'
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Setup Core Binaries (Mihomo & Wintun)
+        shell: bash
+        run: |
+          mkdir -p src-tauri/binaries
+          curl -L -o mihomo.zip "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.30/mihomo-windows-amd64-compatible-v1.19.30.zip"
+          unzip -o mihomo.zip -d mihomo_temp
+          cp mihomo_temp/mihomo-windows-amd64-compatible.exe src-tauri/binaries/mihomo-x86_64-pc-windows-msvc.exe
+          cp mihomo_temp/mihomo-windows-amd64-compatible.exe src-tauri/binaries/mihomo.exe
+          curl -L -o wintun.zip "https://www.wintun.net/builds/wintun-0.14.1.zip"
+          unzip -o wintun.zip -d wintun_temp
+          cp wintun_temp/wintun/bin/amd64/wintun.dll src-tauri/binaries/wintun.dll
+
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Build Tauri Desktop App
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'PulseRotator v__VERSION__'
+          releaseBody: 'Automated release generated via GitHub Actions.'
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
