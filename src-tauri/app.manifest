@@ -22,8 +22,13 @@
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
     <security>
       <requestedPrivileges>
-        <!-- Require Administrator privileges on Windows for Wintun TUN network adapter creation -->
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <!--
+          asInvoker: the UI must launch without a forced UAC prompt so the window
+          actually opens. TUN mode still requires Administrator; the app checks
+          elevation when the user enables TUN and returns a clear error.
+          Run as Administrator (right-click) when full-tunnel TUN is needed.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
     </security>
   </trustInfo>
@@ -36,4 +41,3 @@
     </application>
   </compatibility>
 </assembly>
-

@@ -48,6 +48,36 @@ impl SidecarManager {
             )));
         }
 
+        // Mihomo loads wintun.dll from its own directory for TUN mode.
+        if let Some(bin_dir) = self.binary_path.parent() {
+            let wintun_target = bin_dir.join("wintun.dll");
+            if !wintun_target.exists() {
+                let search = [
+                    bin_dir.join("binaries").join("wintun.dll"),
+                    work_dir.join("wintun.dll"),
+                    work_dir.join("binaries").join("wintun.dll"),
+                    std::env::current_exe()
+                        .ok()
+                        .and_then(|p| p.parent().map(|d| d.join("wintun.dll")))
+                        .unwrap_or_default(),
+                    std::env::current_exe()
+                        .ok()
+                        .and_then(|p| p.parent().map(|d| d.join("binaries").join("wintun.dll")))
+                        .unwrap_or_default(),
+                    PathBuf::from("src-tauri/binaries/wintun.dll"),
+                ];
+                if let Some(src) = search.iter().find(|p| p.is_file()) {
+                    if let Err(e) = std::fs::copy(src, &wintun_target) {
+                        warn!("Failed to copy wintun.dll next to mihomo: {}", e);
+                    } else {
+                        info!("Copied wintun.dll to {:?}", wintun_target);
+                    }
+                } else {
+                    warn!("wintun.dll not found; TUN mode may fail");
+                }
+            }
+        }
+
         #[cfg(windows)]
         let job = ProcessJob::new().map_err(|e| AppError::CoreProcess(e))?;
 

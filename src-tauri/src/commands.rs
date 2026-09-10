@@ -36,6 +36,17 @@ pub async fn cmd_fetch_sub(sub_url: String) -> Result<Vec<ProxyNode>, String> {
 }
 
 #[tauri::command]
+pub async fn cmd_get_diagnostics(state: State<'_, AppState>) -> Result<serde_json::Value, String> {
+    let core_alive = state.core.is_running().await;
+    Ok(serde_json::json!({
+        "core_alive": core_alive,
+        "config_dir": state.config_dir.display().to_string(),
+        "log_dir": std::env::var_os("LOCALAPPDATA")
+            .map(|p| std::path::PathBuf::from(p).join("PulseRotator").join("logs").display().to_string()),
+    }))
+}
+
+#[tauri::command]
 pub async fn cmd_start_rotation(
     app: AppHandle,
     state: State<'_, AppState>,
@@ -45,9 +56,17 @@ pub async fn cmd_start_rotation(
 ) -> Result<(), String> {
     info!("Command: start_rotation (sub: {}, interval: {}s, tun: {})", sub_url, interval_secs, enable_tun);
 
+    if state.rotator.is_active() {
+        return Err("Rotator is already running. Stop it first.".to_string());
+    }
+
     // 1. Admin permission check if TUN is requested
     if enable_tun && !is_elevated() {
-        return Err("Administrator privileges required to enable Wintun TUN mode on Windows!".to_string());
+        return Err(
+            "TUN mode needs Administrator. Right-click PulseRotator → Run as administrator, \
+             or turn TUN off and use mixed-port proxy mode."
+                .to_string(),
+        );
     }
 
     // 2. Generate and write config.yaml for Mihomo

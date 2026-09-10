@@ -1,6 +1,6 @@
 [package]
 name = "nexuflux"
-version = "0.1.1"
+version = "0.1.2"
 description = "PulseRotator - High-Performance Automated IP Rotator & Full Tunnel Client"
 authors = ["PulseRotator Team"]
 edition = "2021"
@@ -39,4 +39,5 @@ windows = { version = "0.58", features = [
     "Win32_Security",
     "Win32_Foundation",
     "Win32_NetworkManagement_IpHelper",
+    "Win32_UI_WindowsAndMessaging",
 ] }
