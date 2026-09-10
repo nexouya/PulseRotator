@@ -1,6 +1,6 @@
 [package]
 name = "nexuflux"
-version = "0.1.0"
+version = "0.1.1"
 description = "PulseRotator - High-Performance Automated IP Rotator & Full Tunnel Client"
 authors = ["PulseRotator Team"]
 edition = "2021"

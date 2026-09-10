@@ -1,6 +1,6 @@
 {
   "name": "nexuflux",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "PulseRotator: Resilient, Blazing-Fast Automated IP Rotator & Full-Tunnel Client",
   "private": true,
   "type": "module",
