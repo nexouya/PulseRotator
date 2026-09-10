@@ -177,7 +177,6 @@ pub fn run() {
     }
 
     let run_result = tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init())
         .setup(|app| {
             let app_data_dir = app
                 .path()
