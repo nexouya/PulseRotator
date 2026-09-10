@@ -6,7 +6,7 @@
 
 use base64::prelude::*;
 use std::time::Duration;
-use tracing::{info, warn};
+use tracing::info;
 use url::Url;
 
 use crate::domain::error::AppError;

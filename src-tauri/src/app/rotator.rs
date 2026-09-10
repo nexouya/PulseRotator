@@ -11,7 +11,6 @@ use tokio::sync::Notify;
 use tracing::{info, warn, error};
 
 use crate::app::quarantine::QuarantineManager;
-use crate::domain::error::AppError;
 use crate::domain::model::{AppLogEntry, PublicIpInfo, RotatorMetrics};
 use crate::domain::traits::CoreController;
 

@@ -1,10 +1,14 @@
 fn main() {
     #[cfg(windows)]
     {
-        let mut res = winres::WindowsResource::new();
-        res.set_manifest_file("app.manifest");
-        // Ignore error if winres is optional in dev, or proceed
-        let _ = res.compile();
+        let manifest = include_str!("app.manifest");
+        let windows = tauri_build::WindowsAttributes::new().app_manifest(manifest);
+        let attrs = tauri_build::Attributes::new().windows_attributes(windows);
+        tauri_build::try_build(attrs).expect("failed to run tauri-build");
     }
-    tauri_build::build()
+    #[cfg(not(windows))]
+    {
+        tauri_build::build()
+    }
 }
+

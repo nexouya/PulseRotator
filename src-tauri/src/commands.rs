@@ -6,13 +6,12 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 use tauri::{AppHandle, State};
-use tracing::{info, warn, error};
+use tracing::info;
 
 use crate::app::quarantine::QuarantineManager;
 use crate::app::rotator::RotatorEngine;
 use crate::app::sub_parser::SubParser;
-use crate::domain::error::AppError;
-use crate::domain::model::{ProxyNode, RotatorMetrics};
+use crate::domain::model::ProxyNode;
 use crate::domain::traits::CoreController;
 use crate::infra::mihomo::config_gen::ConfigGenerator;
 use crate::infra::system::os_ops::{flush_dns_cache, is_elevated};

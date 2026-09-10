@@ -3,7 +3,7 @@
 // Purpose: OS-level utilities: Admin elevation check, DNS cache flush
 // ============================================================================
 
-use tracing::{info, warn};
+use tracing::info;
 use std::process::Command;
 
 /// Check whether the current application process has elevated Administrator privileges

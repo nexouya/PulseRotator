@@ -11,10 +11,10 @@ use std::collections::HashMap;
 use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
-use tracing::{info, warn, error};
+use tracing::info;
 
 use crate::domain::error::AppError;
-use crate::domain::model::{NodeHealth, ProxyNode, PublicIpInfo};
+use crate::domain::model::{ProxyNode, PublicIpInfo};
 use crate::domain::traits::CoreController;
 use crate::infra::process::sidecar::SidecarManager;
 
@@ -36,6 +36,7 @@ struct MihomoProxiesResponse {
 }
 
 #[derive(Deserialize, Debug)]
+#[allow(dead_code)]
 struct MihomoProxyItem {
     name: String,
     #[serde(rename = "type")]
